@@ -1,0 +1,6 @@
+"src/gpio.o"
+"src/main.o"
+"src/rcc.o"
+"src/stm32f3xx_it.o"
+"src/system_stm32f3xx.o"
+"startup/startup_stm32f303xe.o"
