@@ -17,11 +17,11 @@
 /* USER CODE END Private defines */
 
  /* USER CODE BEGIN Prototypes */
-void RCCConfig(void);
+void RCC_Config(void);
 
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
-#endif /*__ pinoutConfig_H */
+#endif

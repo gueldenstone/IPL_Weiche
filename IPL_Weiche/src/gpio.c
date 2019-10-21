@@ -2,10 +2,6 @@
 #include "gpio.h"
 /* Code ------------------------------------------------------------------*/
 
-void GPIO_Config2(void){
-
-}
-
 void GPIO_Config(void){
 	// Clock Enable
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; //GPIO A
@@ -18,10 +14,15 @@ void GPIO_Config(void){
 	 * 10 = Alternate	GPIO<port>->MODER |= GPIO_MODER_MODER<pin>_1;
 	 * 11 = Analog		GPIO<port>->MODER |= GPIO_MODER_MODER<pin>_Msk;
 	 */
+
+	//Outputs
 	GPIOA->MODER |= GPIO_MODER_MODER5_0;
 	GPIOC->MODER |= GPIO_MODER_MODER8_0;
 	GPIOC->MODER |= GPIO_MODER_MODER9_0;
 	GPIOC->MODER |= GPIO_MODER_MODER6_0;
+
+	//Inputs
+	GPIOB->MODER &= ~(GPIO_MODER_MODER1_Msk);
 
 	/* Ouput Type
 	 * 0 = push/pull	GPIO<port>->OTYPER &= ~(GPIO_OTYPER_OT_<pin>);
@@ -48,6 +49,7 @@ void GPIO_Config(void){
 	 * 10 = PD			GPIO<port>->PUPDR |= GPIO_PUPDR_PUPDR<pin>_1;
 	 * 11 = reserved	GPIO<port>->PUPDR |= GPIO_PUPDR_PUPDR<pin>_Msk;
 	 */
+	GPIOB->PUPDR |= GPIO_PUPDR_PUPDR1_1;
 //	GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPDR5_Msk);
 //	GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPDR8_Msk);
 //	GPIOC->PUPDR &= ~(GPIO_PUPDR_PUPDR9_Msk);

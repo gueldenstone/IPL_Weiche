@@ -15,7 +15,7 @@ startup/%.o: ../startup/%.s
 	@echo 'Building file: $<'
 	@echo 'Invoking: MCU GCC Assembler'
 	@echo $(PWD)
-	arm-none-eabi-as -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -I"/Users/lukas/Library/Mobile Documents/com~apple~CloudDocs/05_DEV/repositories/IPL_Weiche/inc" -I"/Users/lukas/Library/Mobile Documents/com~apple~CloudDocs/05_DEV/repositories/IPL_Weiche/CMSIS/core" -I"/Users/lukas/Library/Mobile Documents/com~apple~CloudDocs/05_DEV/repositories/IPL_Weiche/CMSIS/device" -g -o "$@" "$<"
+	arm-none-eabi-as -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -I"/Users/lukas/Library/Mobile Documents/com~apple~CloudDocs/05_DEV/git/IPL/IPL_Weiche/inc" -I"/Users/lukas/Library/Mobile Documents/com~apple~CloudDocs/05_DEV/git/IPL/IPL_Weiche/CMSIS/core" -I"/Users/lukas/Library/Mobile Documents/com~apple~CloudDocs/05_DEV/git/IPL/IPL_Weiche/CMSIS/device" -g -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

@@ -6,74 +6,42 @@
   * @brief   Default main function.
   ******************************************************************************
 */
+//Includes
+#include <stdio.h>
+#include <stdlib.h>
 
-
+//Private Includes
+#include "dcc_decode.h"
 #include "main.h"
 #include "gpio.h"
 #include "rcc.h"
 #include "stm32f3xx.h"
 
+//Variablen
 
 int main(void)
 {
-	RCCConfig();					//Clock Config
+	/*Configuration
+	 *
+	 */
+	RCC_Config();					//Clock Config
 	GPIO_Config(); 					//GPIO Config
-	SysTick_Config(40000);			//SysTick Config
+	EXTI_Config();					//Config Interrupts
+	TIM_Config(1);				//Config Timer
 
-//	volatile int i=0, t=0, p=0;
-//	volatile uint8_t byte=0x4CU;
-//	volatile char bit;
-//	for(i=10;i>=0;i--){
-//		GPIOC->ODR |= GPIO_ODR_8;
-//		for(t=5;t>=0;t--){
-//			p = 65536;
-//			while(p--)
-//				;
-//		}
-//		GPIOC->ODR &= ~(GPIO_ODR_8);
-//		for(t=5;t>=0;t--){
-//			p = 65536;
-//			while(p--)
-//						;
-//		}
-//	}
-//	for(i=7;i>=0;i--){
-//		bit=(byte>>i)&1;
-//		if(bit){
-//			GPIOC->ODR |= GPIO_ODR_8;
-//			for(t=5;t>=0;t--){
-//				p = 65536;
-//				while(p--)
-//					;
-//			}
-//			GPIOC->ODR &= ~(GPIO_ODR_8);
-//			for(t=5;t>=0;t--){
-//				p = 65536;
-//				while(p--)
-//					;
-//			}
-//		}
-//		else
-//		GPIOC->ODR |= GPIO_ODR_8;
-//		for(t=10;t>=0;t--){
-//			p = 65536;
-//			while(p--)
-//				;
-//		}
-//		GPIOC->ODR &= ~(GPIO_ODR_8);
-//		for(t=10;t>=0;t--){
-//			p = 65536;
-//			while(p--)
-//				;
-//		}
-//	}
+	/*DCC_Decode
+	 *
+	 */
+	uint8_t dcc_address=0x01;
+	while(1)
+	{
+		if(received==1 && paket[1]==dcc_address)	GPIOA->ODR |= GPIO_ODR_5;
+		else 										GPIOA->ODR &= ~(GPIO_ODR_5);
 
-//	for(;;){
-//		volatile unsigned int i = 65536;
-//		while(i--)
-//			;
-//		GPIOA->ODR ^= GPIO_ODR_5;
-//	}
-
-
+	}
+	/*Stepper
+	 *
+	 */
 }
+
+
