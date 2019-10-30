@@ -4,8 +4,9 @@
 
 //Variablen
 TypeDefRecstate recstate=WF_Preamble;
-volatile uint8_t bit=0, t=0, i=7, b=0, received=0;
+volatile uint8_t bit=0, t=0, i=7, b=0; //received=0;
 volatile uint8_t paket[3]={0,0,0};
+_Bool received;
 
 void EXTI_Config(void){
 	EXTI->IMR |= EXTI_IMR_IM1; 		//Maske Pin Interrupt 1
@@ -29,7 +30,8 @@ void TIM_Config(uint32_t count){
 void EXTI1_IRQHandler(void){
  	NVIC_ClearPendingIRQ(EXTI1_IRQn);
 	EXTI->PR |= EXTI_PR_PR1;
-	GPIOC->ODR ^= GPIO_ODR_8;
+	//GPIOC->ODR ^= GPIO_ODR_8;
+	TIM6->CR1 |= TIM_CR1_CEN;
 
 }
 

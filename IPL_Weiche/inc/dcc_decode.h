@@ -15,8 +15,9 @@
 /* Variablen */
  typedef enum{WF_Preamble, WF_Lead0, WF_Byte, WF_Trailer}TypeDefRecstate;
  TypeDefRecstate recstate;
- volatile uint8_t bit, t, i, b, received;
+ volatile uint8_t bit, t, i, b; //received;
  volatile uint8_t paket[3];
+_Bool received;
 
 
  /*Prototypes */

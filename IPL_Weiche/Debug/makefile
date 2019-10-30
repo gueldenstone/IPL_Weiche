@@ -30,10 +30,10 @@ endif
 all: IPL_Weiche.elf
 
 # Tool invocations
-IPL_Weiche.elf: $(OBJS) $(USER_OBJS) C:\Users\xswsx\git\IPL_Weiche\IPL_Weiche/LinkerScript.ld
+IPL_Weiche.elf: $(OBJS) $(USER_OBJS) /Users/lukas/Library/Mobile\ Documents/com~apple~CloudDocs/05_DEV/git/IPL/IPL_Weiche/LinkerScript.ld
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU GCC Linker'
-	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -T"C:/Users/xswsx/git/IPL_Weiche/IPL_Weiche/LinkerScript.ld" -Wl,-Map=output.map -Wl,--gc-sections -o "IPL_Weiche.elf" @"objects.list" $(USER_OBJS) $(LIBS) -lm
+	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -T"/Users/lukas/Library/Mobile Documents/com~apple~CloudDocs/05_DEV/git/IPL/IPL_Weiche/LinkerScript.ld" -Wl,-Map=output.map -Wl,--gc-sections -o "IPL_Weiche.elf" @"objects.list" $(USER_OBJS) $(LIBS) -lm
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build

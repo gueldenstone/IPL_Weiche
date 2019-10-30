@@ -10,7 +10,7 @@ void RCC_Config(void){
 	 *
 	 */
 	RCC->CR &= ~(RCC_CR_PLLON); //PLL deaktivieren (zur Config)
-	RCC->CFGR |= RCC_CFGR_PLLMUL9;	//PLL Multi = 9
+	RCC->CFGR |= RCC_CFGR_PLLMUL4;	//PLL Multi = 9
 	RCC->CFGR2 &= ~(RCC_CFGR2_PREDIV_0);		//No PreDIV
 	RCC->CFGR |= RCC_CFGR_PLLSRC_HSI_PREDIV;	//PLL Source -> HSI
 	RCC->CR |= RCC_CR_PLLON; //PLL aktivieren (zur Config)
