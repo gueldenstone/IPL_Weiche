@@ -44,7 +44,12 @@
 #endif 
 
 /* Includes ------------------------------------------------------------------*/
+#include "main.h"
 /* Exported types ------------------------------------------------------------*/
+extern TypeDefRecstate recstate;
+extern volatile int8_t t, i, b; //received;
+extern volatile uint8_t paket[3],byte;
+extern _Bool received, bit, newbit;
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
@@ -58,6 +63,8 @@ void SVC_Handler(void);
 void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
+void EXTI1_IRQHandler(void);
+void TIM6_DAC_IRQHandler(void);
 
 #ifdef __cplusplus
 }

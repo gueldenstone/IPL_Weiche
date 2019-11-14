@@ -11,13 +11,17 @@
 #include <stdlib.h>
 
 //Private Includes
-#include "dcc_decode.h"
+#include "config.h"
 #include "main.h"
-#include "gpio.h"
-#include "rcc.h"
 #include "stm32f3xx.h"
+#include "stm32f3xx_it.h"
 
-//Variablen
+//Variablen initialisieren
+TypeDefRecstate recstate;
+volatile int8_t t=0, i=7; //received;
+volatile uint8_t paket[3], byte, dcc_adress;
+_Bool received, bit, newbit;
+
 
 int main(void)
 {
@@ -27,20 +31,32 @@ int main(void)
 	RCC_Config();					//Clock Config
 	GPIO_Config(); 					//GPIO Config
 	EXTI_Config();					//Config Interrupts
-	TIM_Config(1);				//Config Timer
+	TIM_Config();					//Config Timer
 
 	/*DCC_Decode
 	 *
 	 */
-	uint8_t dcc_address=0x01;
-	while(1)
-	{
-		if(received==1 && paket[1]==dcc_address)	GPIOA->ODR |= GPIO_ODR_5;
-		else 										GPIOA->ODR &= ~(GPIO_ODR_5);
+	dcc_adress = getadress();		//Adresse auslesen
+	while(1){
+		if(received==1){				GPIOA->ODR |= GPIO_ODR_5; while(1){}}
+		else 						GPIOA->ODR &= ~(GPIO_ODR_5);
 
-	}
 	/*Stepper
 	 *
 	 */
+
+	}
 }
 
+uint8_t getadress(void){
+	uint8_t adress=0;
+	adress |= (GPIOB->IDR & GPIO_IDR_3)<<7;
+	adress |= (GPIOB->IDR & GPIO_IDR_4)<<6;
+	adress |= (GPIOB->IDR & GPIO_IDR_5)<<5;
+	adress |= (GPIOB->IDR & GPIO_IDR_6)<<4;
+	adress |= (GPIOB->IDR & GPIO_IDR_7)<<3;
+	adress |= (GPIOB->IDR & GPIO_IDR_8)<<2;
+	adress |= (GPIOB->IDR & GPIO_IDR_9)<<1;
+	adress |= (GPIOB->IDR & GPIO_IDR_10)<<0;
+	return adress;
+}

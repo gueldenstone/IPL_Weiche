@@ -13,16 +13,12 @@
 /* USER CODE END Includes */
 
 /* Variablen */
- typedef enum{WF_Preamble, WF_Lead0, WF_Byte, WF_Trailer}TypeDefRecstate;
- TypeDefRecstate recstate;
- volatile uint8_t bit, t, i, b; //received;
- volatile uint8_t paket[3];
-_Bool received;
+
 
 
  /*Prototypes */
 void EXTI_Config(void);
-void TIM_Config(uint32_t count);
+void TIM_Config(void);
 void EXTI1_IRQHandler(void);
 void EXTI2_IRQHandler(void);
 void TIM6_DAC_IRQHandler(void);

@@ -1,9 +1,6 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __gpio_H
 #define __gpio_H
-#ifdef __cplusplus
- extern "C" {
-#endif
 
 /* Includes ------------------------------------------------------------------*/
 
@@ -35,10 +32,9 @@
 
  /* BEGIN Prototypes */
  void GPIO_Config(void);
-
+ void RCC_Config(void);
+ void EXTI_Config(void);
+ void TIM_Config(void);
 /* END Prototypes */
 
-#ifdef __cplusplus
-}
-#endif
-#endif /*__ pinoutConfig_H */
+#endif /*__gpio_H */

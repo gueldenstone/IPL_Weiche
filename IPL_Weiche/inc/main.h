@@ -15,7 +15,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+typedef enum{WF_Preamble, WF_Lead0, WF_Byte, WF_Trailer}TypeDefRecstate;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -25,11 +25,15 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
+#define DCC_SAMPLEPOINT 87
+#define PSC_USEC ((SystemCoreClock/1000000)-1)
+#define PSC_MSEC ((SystemCoreClock/1000)-1)
 
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
+uint8_t getadress(void);
 
 /* USER CODE BEGIN EFP */
 
