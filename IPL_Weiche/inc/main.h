@@ -25,7 +25,7 @@ typedef enum{WF_Preamble, WF_Lead0, WF_Byte, WF_Trailer}TypeDefRecstate;
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-#define DCC_SAMPLEPOINT 87
+#define DCC_SAMPLEPOINT 86
 #define PSC_USEC ((SystemCoreClock/1000000)-1)
 #define PSC_MSEC ((SystemCoreClock/1000)-1)
 

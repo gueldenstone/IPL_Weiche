@@ -60,18 +60,18 @@ void GPIO_Config(void){
 	 * GPIOx_MODER_ANALOG
 	 */
 	//Inputs
-//	GPIOA->MODER |= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER1_Pos); //PA1 DCC Input
-//	GPIOA->MODER |= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER2_Pos); //PA2 Pos1 Input
-//	GPIOA->MODER |= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER3_Pos); //PA3 Pos2 Input
-//
-//	GPIOB->MODER &= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER3_Pos); //PB2 DIP-Switch 1
-//	GPIOB->MODER &= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER4_Pos); //PB2 DIP-Switch 2
-//	GPIOB->MODER &= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER5_Pos); //PB2 DIP-Switch 3
-//	GPIOB->MODER &= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER6_Pos); //PB2 DIP-Switch 4
-//	GPIOB->MODER &= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER7_Pos); //PB2 DIP-Switch 5
-//	GPIOB->MODER &= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER8_Pos); //PB2 DIP-Switch 6
-//	GPIOB->MODER &= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER9_Pos); //PB2 DIP-Switch 7
-//	GPIOB->MODER &= ~(~GPIOx_MODER_INPUT << GPIO_MODER_MODER10_Pos); //PB2 DIP-Switch 8
+	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER1_Pos); //PA1 DCC Input
+	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER2_Pos); //PA2 Pos1 Input
+	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER3_Pos); //PA3 Pos2 Input
+
+	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER3_Pos); //PB2 DIP-Switch 1
+	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER4_Pos); //PB3 DIP-Switch 2
+	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER5_Pos); //PB4 DIP-Switch 3
+	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER6_Pos); //PB5 DIP-Switch 4
+	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER7_Pos); //PB6 DIP-Switch 5
+	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER8_Pos); //PB7 DIP-Switch 6
+	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER9_Pos); //PB8 DIP-Switch 7
+	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER10_Pos); //PB9 DIP-Switch 8
 
 	GPIOB->MODER |= (GPIOx_MODER_ANALOG << GPIO_MODER_MODER3_Pos); //PB1 Strommessung ADC3_IN1
 
@@ -114,9 +114,8 @@ void GPIO_Config(void){
 	 * GPIOx_PUPDR_PU
 	 * GPIOx_PUPDR_PD
 	 */
-	//GPIOA->PUPDR |= GPIOx_PUPDR_PD<<GPIO_PUPDR_PUPDR0_Pos;	//Pulldown für PA0
 
-	/* Reset Pins to Default
+	/* ########## Reset Pins to Default ##########
 	 * Port Reset		GPIO<port>->ODR &= ~(0xFFFF)
 	 * Port Set			GPIO<port>->ODR |= 0xFFFF
 	 * Pin Reset		GPIOA->ODR &= ~(GPIO_ODR_<pin>);
@@ -126,18 +125,18 @@ void GPIO_Config(void){
 
 
 void TIM_Config(void){
-
 	/* Timer 6 */
 	TIM6->CR1 &= ~TIM_CR1_CEN;		//disable Timer6
 	TIM6->ARR = DCC_SAMPLEPOINT; 	//set counter value
-	TIM6->PSC = PSC_USEC;			//set prescaler value
-	TIM6->CR1 |= TIM_CR1_ARPE; 		//enable auto reload preload
+	TIM6->PSC = 71;			//set prescaler value
+//	TIM6->CR1 |= TIM_CR1_ARPE; 		//enable auto reload preload
 	TIM6->CR1 |= TIM_CR1_OPM; 		//Enable one-pulse Mode
 	TIM6->DIER |= TIM_DIER_UIE; 	//Enable Interrupt on Update
 	NVIC_EnableIRQ(TIM6_DAC_IRQn);	//Enable NVIC on TIM6
 }
 
 void EXTI_Config(void){
+	/* EXTI 0 an PA0 */
 	EXTI->IMR |= EXTI_IMR_IM0; 						//Maske Pin Interrupt PA0
 	EXTI->RTSR |= EXTI_RTSR_RT0;					//Rising Edge Trigger ausgewählt
 	SYSCFG->EXTICR[0] |= SYSCFG_EXTICR1_EXTI0_PA; 	//Connect EXTI0 mit Port A

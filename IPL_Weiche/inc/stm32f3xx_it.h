@@ -49,7 +49,7 @@
 extern TypeDefRecstate recstate;
 extern volatile int8_t t, i, b; //received;
 extern volatile uint8_t paket[3],byte;
-extern _Bool received, bit, newbit;
+extern volatile _Bool received, bit, newbit;
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */

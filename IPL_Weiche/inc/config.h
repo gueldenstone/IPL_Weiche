@@ -15,7 +15,7 @@
 #define GPIOx_MODER_ANALOG 		0b11
 
 /* ########## GPIO Output Types ########## */
-#define GPIOx_OTYPER_PP		0b0
+#define GPIOx_OTYPER_PP			0b0
 #define GPIOx_OTYPER_OD 		0b1
 
 /* ########## GPIO Output Speed ########## */
@@ -30,11 +30,11 @@
 
 /* END Private defines */
 
- /* BEGIN Prototypes */
- void GPIO_Config(void);
- void RCC_Config(void);
- void EXTI_Config(void);
- void TIM_Config(void);
+/* BEGIN Prototypes */
+void GPIO_Config(void);
+void RCC_Config(void);
+void EXTI_Config(void);
+void TIM_Config(void);
 /* END Prototypes */
 
 #endif /*__gpio_H */

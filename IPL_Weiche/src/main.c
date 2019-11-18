@@ -18,9 +18,9 @@
 
 //Variablen initialisieren
 TypeDefRecstate recstate;
-volatile int8_t t=0, i=7; //received;
+volatile int8_t t=0, i=8; //received;
 volatile uint8_t paket[3], byte, dcc_adress;
-_Bool received, bit, newbit;
+volatile _Bool received, bit, newbit;
 
 
 int main(void)
@@ -38,7 +38,10 @@ int main(void)
 	 */
 	dcc_adress = getadress();		//Adresse auslesen
 	while(1){
-		if(received==1){				GPIOA->ODR |= GPIO_ODR_5; while(1){}}
+		if(received){
+			GPIOA->ODR |= GPIO_ODR_5;
+			received=0;
+		}
 		else 						GPIOA->ODR &= ~(GPIO_ODR_5);
 
 	/*Stepper
