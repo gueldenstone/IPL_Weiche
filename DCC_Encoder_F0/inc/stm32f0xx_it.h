@@ -1,9 +1,7 @@
 /**
   ******************************************************************************
-  * @file    Templates/Inc/stm32f3xx_it.h
+  * @file    stm32f0xx_it.h 
   * @author  MCD Application Team
-  * @version V1.7.0
-  * @date    16-December-2016
   * @brief   This file contains the headers of the interrupt handlers.
   ******************************************************************************
   * @attention
@@ -36,8 +34,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F3xx_IT_H
-#define __STM32F3xx_IT_H
+#ifndef __STM32F0xx_IT_H
+#define __STM32F0xx_IT_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -46,30 +44,23 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 /* Exported types ------------------------------------------------------------*/
-extern TypeDefRecstate recstate;
-extern volatile int8_t t, i, b; //received;
-extern volatile uint8_t package[3],byte;
-extern volatile _Bool received, bit, newbit;
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
 void NMI_Handler(void);
 void HardFault_Handler(void);
-void MemManage_Handler(void);
-void BusFault_Handler(void);
-void UsageFault_Handler(void);
 void SVC_Handler(void);
-void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
-void EXTI1_IRQHandler(void);
-void TIM6_DAC_IRQHandler(void);
+void TIM6_DAC_IRQ_Handler(void);
+void TIM7_IRQ_Handler(void);
+void EXTI15_10_IRQHandler(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __STM32F3xx_IT_H */
+#endif /* __STM32F0xx_IT_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

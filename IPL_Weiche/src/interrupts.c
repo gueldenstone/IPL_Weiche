@@ -32,7 +32,7 @@ void EXTI0_IRQHandler(void){
 
 void TIM6_DAC_IRQHandler(void){
 	bit = !((_Bool)(GPIOA->IDR & 1));
-	GPIOB->ODR ^= GPIO_ODR_12;
+	GPIOA->ODR &= ~GPIO_ODR_5;
 	switch(recstate){
 		case WF_Preamble:
 			if((bit==1) && (t<10)) t++;
@@ -45,7 +45,7 @@ void TIM6_DAC_IRQHandler(void){
 			if (bit==0) recstate=WF_Byte;
 			break;
 		case WF_Byte:
-			paket[byte] |= bit<<(i-1);
+			package[byte] |= bit<<(i-1);
 			i--;
 			if(i<=0){
 				recstate=WF_Trailer;
@@ -63,7 +63,6 @@ void TIM6_DAC_IRQHandler(void){
 				}
 			break;
 	}
-	GPIOB->ODR ^= GPIO_ODR_12;
 
 //ISR finished
 NVIC_ClearPendingIRQ(TIM6_DAC_IRQn);

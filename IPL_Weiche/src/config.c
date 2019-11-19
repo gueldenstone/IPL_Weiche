@@ -35,7 +35,13 @@ void RCC_Config(void){
 	 */
 
   	//Timer
+  	RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;	//Enable Timer3 Clock
+  	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;	//Enable Timer3 Clock
   	RCC->APB1ENR |= RCC_APB1ENR_TIM6EN; //Enable Timer6 Clock
+
+
+  	//ADC
+  	RCC->AHBENR |= RCC_AHBENR_ADC12EN;
 
 	//GPIO
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; //GPIO A
@@ -60,9 +66,9 @@ void GPIO_Config(void){
 	 * GPIOx_MODER_ANALOG
 	 */
 	//Inputs
-	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER1_Pos); //PA1 DCC Input
-	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER2_Pos); //PA2 Pos1 Input
-	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER3_Pos); //PA3 Pos2 Input
+	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER0_Pos); //PA0 DCC Input
+	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER1_Pos); //PA1 Pos1 Input
+	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER2_Pos); //PA2 Pos2 Input
 
 	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER3_Pos); //PB2 DIP-Switch 1
 	GPIOB->MODER &= ~(0b11 << GPIO_MODER_MODER4_Pos); //PB3 DIP-Switch 2
@@ -102,10 +108,10 @@ void GPIO_Config(void){
 	 * GPIOx_OSPEEDR_HIGH
 	 */
 	//PA3 bis PA6 high-speed  switching
-	GPIOA->MODER |= (GPIOx_OSPEEDR_HIGH << GPIO_MODER_MODER3_Pos);
-	GPIOA->MODER |= (GPIOx_OSPEEDR_HIGH << GPIO_MODER_MODER4_Pos);
-	GPIOA->MODER |= (GPIOx_OSPEEDR_HIGH << GPIO_MODER_MODER5_Pos);
-	GPIOA->MODER |= (GPIOx_OSPEEDR_HIGH << GPIO_MODER_MODER6_Pos);
+//	GPIOA->MODER |= (GPIOx_OSPEEDR_HIGH << GPIO_MODER_MODER3_Pos);
+//	GPIOA->MODER |= (GPIOx_OSPEEDR_HIGH << GPIO_MODER_MODER4_Pos);
+//	GPIOA->MODER |= (GPIOx_OSPEEDR_HIGH << GPIO_MODER_MODER5_Pos);
+//	GPIOA->MODER |= (GPIOx_OSPEEDR_HIGH << GPIO_MODER_MODER6_Pos);
 
 	/* ########## GPIO Pull-up/-down ##########
 	 * GPIOx -> PUPDR
@@ -141,4 +147,25 @@ void EXTI_Config(void){
 	EXTI->RTSR |= EXTI_RTSR_RT0;					//Rising Edge Trigger ausgewählt
 	SYSCFG->EXTICR[0] |= SYSCFG_EXTICR1_EXTI0_PA; 	//Connect EXTI0 mit Port A
 	NVIC_EnableIRQ(EXTI0_IRQn); 					//Enable NVIC on EXTI0
+}
+
+void ADC_CONFIG(void){
+
+	//ADC1
+	ADC12_COMMON->CCR	|= 0x00010000; 			 // Synchroner ADC-Clock ,Vorteiler 1
+	ADC1->SQR1			|= 0x00000080; 			 // 1st conv. in regular sequence: Channel 2 (PA1)
+	ADC1->SMPR1			|= 0x000001C0; 			 // Channel 2: Sample time 601.5 clockcycles (schnellste)
+	ADC1->DIFSEL		 = 0x00000002;
+	ADC1->CR 	    	&=~0x30000000; 		     // Voltage regulator: Intermediate state (0b11 << 28), 10 resetstate
+	ADC1->CR 		|= 0x50000000; 			 // Voltage regulator: Enabled (0b01 << 28) DifferentialMode
+	for (volatile int x = 0; x < 60; x++){}  // Warte 10 us
+	ADC1->CR 		|= 0x80000000; 			 // Kalibriere den ADC
+	while ((ADC1->CR & 0x80000000) != 0){}   // Warte bis Kalibrierung abgeschlossen
+	ADC1->IER		|= 0x0080; 				 //INTERRUPT enable analog watchdog1
+	ADC1->TR1		 = 0x05CF0000;			 //0x007C [H]->124->bei 100mA über 1 OHM
+	ADC1->CFGR		 = 0x08C03000;			 //Watchdog Enable on regular channels(23),AWD1CH 2(29-26),continuous (13),overrunmode(12)
+	ADC1->CR 		|= 0x00000001; 		 	 // Enable ADC
+	while((ADC1->ISR & 0x00000001) == 0){} 	 // Warte bis ADC bereit
+	ADC1->CR		|= 0x00000004;			 //start regular conversation
+	NVIC_EnableIRQ (ADC1_2_IRQn);
 }

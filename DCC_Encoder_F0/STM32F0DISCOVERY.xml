@@ -10,11 +10,10 @@
 ]>
 
 <targetDefinitions>
-  <board id="nucleo-f303re">
-    <name>NUCLEO-F303RE</name>
-    <dbgIF>JTAG</dbgIF>
+  <board id="stm32f0discovery">
+    <name>STM32F0DISCOVERY</name>
     <dbgIF>SWD</dbgIF>
     <dbgDEV>ST-Link</dbgDEV>
-    <mcuId>stm32f303retx</mcuId>
+    <mcuId>stm32f051r8tx</mcuId>
   </board>
 </targetDefinitions>
