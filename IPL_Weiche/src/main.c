@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @author  Lukas Güldemstein
+  * @author  Kevin Heidenreich & Lukas Güldemstein
   * @version V1.0
   * @date    01-December-2013
   * @brief   Default main function.
@@ -11,52 +11,46 @@
 #include <stdlib.h>
 
 //Private Includes
-#include "config.h"
 #include "main.h"
+#include "config.h"
+#include "interrupts.h"
 #include "stm32f3xx.h"
-#include "stm32f3xx_it.h"
 
 //Variablen initialisieren
-TypeDefRecstate recstate;
-volatile int8_t t=0, i=8; //received;
-volatile uint8_t package[3], byte, parity, switch_address;
+volatile uint8_t package[3], parity, switch_address;
 volatile uint16_t dcc_address, package_address;
-volatile _Bool received, bit, newbit;
+volatile _Bool received;
 volatile TypeDefTurnout turnout;
 
 
-int main(void)
-{
+int main(void){
 	__disable_irq();				//Interrupts ausschalten
+
 	/* Configuration */
-	RCC_Config();					//Clock Config
+	RCC_Config();					//Clock Config auf 72Mhz durch
 	GPIO_Config(); 					//GPIO Config
-	EXTI_Config();					//Config Interrupts
 	TIM_Config();					//Config Timer
 
 	/* Initialisierung/Kalibrierung */
-	GPIOA->ODR |= GPIO_ODR_3;
+	dcc_address = 0x1A2;			//Adresse auslesen
 
 	__enable_irq();					//Interrupts einschalten
 
 	//Schleife
 	while(1){
 
-	/* DCC Decode */
-	dcc_address = 0x1A2;		//Adresse auslesen
-
+		/* DCC Decode */
 		if(received){
-			turnout.address=(package[1] & 0x6)>>1;
-			turnout.direction=(package[1] & 0x1);
+			turnout.address=(package[1] & 0x6)>>1;		//Weichenadresse auslesen
+			turnout.direction=(package[1] & 0x1);		//Richtung auslesen
 			/*	byte 1		byte 2
-				10AAAAAA  	1AA11BBR
+				10AAAAAA  	1AAA1BBR
 
 				A=address
 				B=turnout
 				R=direction
 			*/
-
-			package_address = ((package[0] & 0x3F)<<3) | ((package[1] & 0x70)>>4);
+			package_address = ((package[0] & 0x3F)<<3) | ((package[1] & 0x70)>>4);	//DCC-Adresse auslesen
 			//Pariät prüfen
 			if((package[0]^package[1])==package[2]){
 				parity = 1;
@@ -64,12 +58,16 @@ int main(void)
 			if(package_address==dcc_address && parity){
 				GPIOA->ODR |= GPIO_ODR_5;
 				received=0;
-				GPIOA->ODR |= GPIO_ODR_2;
 			}
 			else received=0;
 		}
 	}
 }
+
+
+
+
+
 
 
 //noch buggy

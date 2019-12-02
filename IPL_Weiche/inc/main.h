@@ -2,62 +2,37 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f3xx.h"
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
-
-/* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
+/* Variables -----------------------------------------------------------------*/
 typedef enum{WF_Preamble, WF_Lead0, WF_Byte, WF_Trailer}TypeDefRecstate;
 typedef struct{
 	uint8_t address;
 	uint8_t direction;
 	uint8_t position;
 }TypeDefTurnout;
-/* USER CODE END ET */
 
-/* Exported constants --------------------------------------------------------*/
-/* USER CODE BEGIN EC */
-
-/* USER CODE END EC */
-
-/* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
+/* Defines -------------------------------------------------------------------*/
 //DCC-Decode
 #define DCC_SAMPLEPOINT 86
-#define PSC_USEC ((SystemCoreClock/1000000)-1)
-#define PSC_MSEC ((SystemCoreClock/1000)-1)
 
-//turnout
+//Weiche
 #define H_BRIDGE_ON	 (GPIOA->BRR |=0x0010); //H_Bridge ON
 #define H_BRIDGE_OFF (GPIOA->BSRR|=0x0010); //H_Bridge OFF
+#define MOTORPWM_OFF 	TIM1->CCER&=~0x00000011;
+#define MOTOR_LEFT 		TIM1->CCER=0x0000005F;
+#define MOTOR_RIGHT		TIM1->CCER=0x00000055;
+#define blinkonr	TIM3->CCR1=400;
+#define blinkonl	TIM3->CCR2=400;
+#define LEDonr		TIM3->CCR1=4095;
+#define LEDonl		TIM3->CCR2=4095;
+#define LEDoffr		TIM3->CCR1=0000;
+#define LEDoffl		TIM3->CCR2=0000;
 
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
+/* Prototypes -----------------------------------------------------------------*/
 void Error_Handler(void);
-uint8_t get_adress(void);
-void dcc_decode(void);
+uint8_t getadress(void);
 
-/* USER CODE BEGIN EFP */
-
-/* USER CODE END EFP */
-
-/* Private defines -----------------------------------------------------------*/
-
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* __MAIN_H */

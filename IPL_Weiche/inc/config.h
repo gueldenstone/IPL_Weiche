@@ -1,13 +1,11 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __gpio_H
-#define __gpio_H
+#ifndef __CONFIG_H
+#define __CONFIG_H
 
 /* Includes ------------------------------------------------------------------*/
-
 #include "main.h"
 
-/* BEGIN Private defines */
-
+/* Defines -------------------------------------------------------------------*/
 /* ########## GPIO MODES ########## */
 #define GPIOx_MODER_INPUT		0b00
 #define GPIOx_MODER_OUTPUT 		0b01
@@ -28,14 +26,11 @@
 #define GPIOx_PUPDR_PU		0b01
 #define GPIOx_PUPDR_PD		0b10
 
-/* END Private defines */
-
-/* BEGIN Prototypes */
+/* Prototypes -----------------------------------------------------------------*/
 void GPIO_Config(void);
 void RCC_Config(void);
 void EXTI_Config(void);
 void TIM_Config(void);
-void ADC_CONFIG (void);
-/* END Prototypes */
+void ADC_Config(void);
 
-#endif /*__gpio_H */
+#endif
