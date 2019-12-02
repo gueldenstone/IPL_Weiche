@@ -40,6 +40,7 @@ void TIM2_IRQHandler(void){
 			break;
 		case WF_Lead0:							// Auf Trennbit warten
 			if (bit==0) recstate=WF_Byte;		// Falls Trennbit erkannt, erstes Byte auslesen
+			else recstate=WF_Preamble;
 			break;
 		case WF_Byte:							// Auf Byte warten
 			package[byte] |= bit<<(i-1);		// Bitstelle des Bytes auslesen und speichern
@@ -63,5 +64,5 @@ void TIM2_IRQHandler(void){
 	}
 	/* ISR finished */
 	NVIC_ClearPendingIRQ(TIM6_DAC_IRQn);
-	TIM6->SR &= ~TIM_SR_UIF;
+	TIM2->SR &= ~TIM_SR_UIF;
 }
