@@ -7,11 +7,17 @@
 
 /* Variables -----------------------------------------------------------------*/
 typedef enum{WF_Preamble, WF_Lead0, WF_Byte, WF_Trailer}TypeDefRecstate;
+typedef enum{Left,Right}TypeDefPosition;
 typedef struct{
-	uint8_t address;
-	uint8_t direction;
-	uint8_t position;
+	const uint8_t address;
+	const _Bool moving;
+	const TypeDefPosition position;
 }TypeDefTurnout;
+typedef struct{
+	uint8_t dcc_address;
+	uint8_t turnout_address;
+	_Bool direction;
+}TypeDefPackage;
 
 /* Defines -------------------------------------------------------------------*/
 //DCC-Decode

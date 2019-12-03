@@ -18,9 +18,10 @@
 
 //Variablen initialisieren
 volatile uint8_t package[3], parity, switch_address;
-volatile uint16_t dcc_address, package_address;
+volatile uint16_t dcc_address;
 volatile _Bool received;
-volatile TypeDefTurnout turnout;
+volatile TypeDefTurnout turnout1;	// turnout Data
+volatile TypeDefPackage rPackage;	// received Package
 
 
 int main(void){
@@ -41,8 +42,8 @@ int main(void){
 
 		/* DCC Decode */
 		if(received){
-			turnout.address=(package[1] & 0x6)>>1;		//Weichenadresse auslesen
-			turnout.direction=(package[1] & 0x1);		//Richtung auslesen
+			rPackage.turnout_address=(package[1] & 0x6)>>1;		//Weichenadresse auslesen
+			rPackage.direction=(package[1] & 0x1);				//Richtung auslesen
 			/*	byte 1		byte 2
 				10AAAAAA  	1AAA1BBR
 
@@ -50,12 +51,16 @@ int main(void){
 				B=turnout
 				R=direction
 			*/
-			package_address = ((package[0] & 0x3F)<<3) | ((package[1] & 0x70)>>4);	//DCC-Adresse auslesen
+			rPackage.dcc_address = ((package[0] & 0x3F)<<3) | ((package[1] & 0x70)>>4);	//DCC-Adresse auslesen
 			//Pariät prüfen
 			if((package[0]^package[1])==package[2]){
 				parity = 1;
 			}
-			if(package_address==dcc_address && parity){
+			/* DCC Adresse prüfen */
+			if(rPackage.dcc_address==dcc_address && parity){
+				switch(rPackage.turnout_address){
+
+				}
 				GPIOA->ODR |= GPIO_ODR_5;
 				received=0;
 			}
