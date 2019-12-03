@@ -23,22 +23,30 @@ typedef struct{
 //DCC-Decode
 #define DCC_SAMPLEPOINT 86
 
-//Weiche
-#define H_BRIDGE_ON	 (GPIOA->BRR |=0x0010); //H_Bridge ON
-#define H_BRIDGE_OFF (GPIOA->BSRR|=0x0010); //H_Bridge OFF
-#define MOTORPWM_OFF 	TIM1->CCER&=~0x00000011;
-#define MOTOR_LEFT 		TIM1->CCER=0x0000005F;
-#define MOTOR_RIGHT		TIM1->CCER=0x00000055;
-#define blinkonr	TIM3->CCR1=400;
-#define blinkonl	TIM3->CCR2=400;
-#define LEDonr		TIM3->CCR1=4095;
-#define LEDonl		TIM3->CCR2=4095;
-#define LEDoffr		TIM3->CCR1=0000;
-#define LEDoffl		TIM3->CCR2=0000;
+/* Weiche */
+#define H_BRIDGE_OFF	(GPIOC->BRR |=0x0001) //H_Bridge OFF PA3/(PC0 für test)
+#define H_BRIDGE_ON 	(GPIOC->BSRR|=0x0001) //H_Bridge ON  PA3/(PC0 für test)
+#define MOTORPWM_OFF 	TIM8->CCER&=~0x00000011;
+#define MOTOR_LEFT 		TIM8->CCER=0x0000005F;
+#define MOTOR_RIGHT		TIM8->CCER=0x00000055;
+
+/* LEDs */
+#define blinkonr	TIM4->CCR1=5000
+#define blinkonl	TIM4->CCR2=5000
+#define LEDonr		TIM4->CCR1=10000
+#define LEDonl		TIM4->CCR2=10000
+#define LEDoffr		TIM4->CCR1=0000
+#define LEDoffl		TIM4->CCR2=0000
+#define LED_ARR		(10000)
+
+/* Buttons & Poti */
+#define BUTTON_LEFT (GPIOA->IDR & 0x2)
+#define BUTTON_RIGHT (GPIOB->IDR & 0x1)
+#define POTI ADC2->DR //4095 links;0 rechts
 
 /* Prototypes -----------------------------------------------------------------*/
 void Error_Handler(void);
 uint8_t getadress(void);
-
+void checkpos(void);
 
 #endif /* __MAIN_H */

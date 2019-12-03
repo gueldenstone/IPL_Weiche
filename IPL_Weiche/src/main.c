@@ -23,6 +23,10 @@ volatile _Bool received;
 volatile TypeDefTurnout turnout1;	// turnout Data
 volatile TypeDefPackage rPackage;	// received Package
 
+//Weiche
+volatile int set;
+int j=2000000; //Delay für Zeit bis Fault Status (soll 1s)
+
 
 int main(void){
 	__disable_irq();				//Interrupts ausschalten
@@ -40,6 +44,8 @@ int main(void){
 	//Schleife
 	while(1){
 
+		/* Position auslesen */
+		checkpos();		//Refactor
 		/* DCC Decode */
 		if(received){
 			rPackage.turnout_address=(package[1] & 0x6)>>1;		//Weichenadresse auslesen
@@ -69,11 +75,23 @@ int main(void){
 	}
 }
 
+void checkpos(void){
+	if ((set==1) || (set==2)){
+	int fader_old=POTI;
+	int fader_sub50 = fader_old-50;
+	int fader_add50 = fader_old+50;
+	for (int i=0;i<=j;i++){}
+		if ((POTI>(abs(fader_sub50)))& (POTI<(fader_add50)))
+		{
+			MOTORPWM_OFF;
+			H_BRIDGE_OFF;
+			blinkonl;
+			blinkonr;
+			set=3;
+		}
+	}
 
-
-
-
-
+}
 
 //noch buggy
 uint8_t get_address(void){

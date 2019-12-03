@@ -15,10 +15,11 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 /* EXTI */
+void EXTI0_IRQHandler (void);
 void EXTI1_IRQHandler(void);
 /* TIM */
 void TIM2_IRQHandler(void);
 /* ADC */
-
+void ADC1_2_IRQHandler(void);
 #endif
 

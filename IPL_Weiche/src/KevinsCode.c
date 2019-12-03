@@ -8,7 +8,7 @@
   ******************************************************************************
 */
 
-#include "stm32f30x.h"
+#include "stm32f3xx.h"
 #include "stdlib.h"
 #include "math.h"
 
@@ -65,14 +65,14 @@ void GPIOx_CONFIG (void)
 
 
 
-#define H_BRIDGE_OFF	(GPIOC->BRR |=0x0001) //H_Bridge OFF PA3/(PC0 für test)
-#define H_BRIDGE_ON 	(GPIOC->BSRR|=0x0001) //H_Bridge ON  PA3/(PC0 für test)
+#define H_BRIDGE_OFF	(GPIOC->BRR |=0x0001) //H_Bridge OFF PA3/(PC0 fï¿½r test)
+#define H_BRIDGE_ON 	(GPIOC->BSRR|=0x0001) //H_Bridge ON  PA3/(PC0 fï¿½r test)
 	H_BRIDGE_OFF;
 }
 
 void ADC2_CONFIG (void)
 {
-	ADC1_2->CCR		|= 0x00010000; 			 // Synchroner ADC-Clock ,Vorteiler 1
+	ADC12_COMMON->CCR		|= 0x00010000; 			 // Synchroner ADC-Clock ,Vorteiler 1
 	ADC2->SQR1		|= 0x00000040; 			 // 1st conv. in regular sequence: Channel 1 (PA4)
 	ADC2->CR 	    &=~0x30000000; 		     // Voltage regulator: Intermediate state (0b11 << 28), 10 resetstate
 	ADC2->CR 		|= 0x50000000; 			 // Voltage regulator: Enabled (0b01 << 28) DifferentialMode
@@ -81,7 +81,7 @@ void ADC2_CONFIG (void)
 	ADC2->CR 		|= 0x80000000; 			 // Kalibriere den ADC
 	while ((ADC2->CR & 0x80000000) != 0){}   // Warte bis Kalibrierung abgeschlossen
 	ADC2->IER		 = 0x0080; 				 //INTERRUPT enable analog watchdog1
-	ADC2->TR1		 = 0xFFD00014;			 	 //0x007C [H]->124->bei 100mA über 1 OHM
+	ADC2->TR1		 = 0xFFD00014;			 	 //0x007C [H]->124->bei 100mA ï¿½ber 1 OHM
 	ADC2->CFGR		 = 0x04C03000;			 //Watchdog Enable on regular channels(23),AWD1CH 2(29-26),continuous (13),overrunmode(12)
 
 	ADC2->CR 		|= 0x00000001; 		 	 // Enable ADC
@@ -137,7 +137,7 @@ void SET_COURSE (void)
 	int fail=0;
 	int i;
 	int posstart =0;
-	if (BUTTON_LEFT)			//wenn knopf gedrückt wurde PA1
+	if (BUTTON_LEFT)			//wenn knopf gedrï¿½ckt wurde PA1
 	{
 		posstart = POTI;
 

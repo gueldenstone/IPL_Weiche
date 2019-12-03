@@ -25,12 +25,17 @@ void RCC_Config(void){
 	/* Peripherie Clock */
 
   	/* Timer */
-  	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; //Enable TIM2 Clock
+  	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; // Enable TIM2 Clock
+  	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN; // Enable TIM4 Clock
+  	RCC->APB2ENR |= RCC_APB2ENR_TIM8EN; // Enable TIM8 Clock
 
 	/* GPIO */
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; //GPIO A
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN; //GPIO B
+	RCC->AHBENR |= RCC_AHBENR_GPIOCEN; //GPIO C
 
+	/* ADC */
+	RCC->AHBENR |= RCC_AHBENR_ADC12EN; //ADC12
 	/* Other */
 	RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN; //Clock to SYSCFG
 
@@ -53,6 +58,8 @@ void GPIO_Config(void){
 	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER1_Pos); 	// PA1 Pos1 Input
 	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER2_Pos); 	// PA2 Pos2 Input
 
+	GPIOC->MODER &= ~(0b11 << GPIO_MODER_MODER0_Pos); 	// PC0 nur zum Testen nSleep
+
 //	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER5_Pos); 	// PA5 DIP-Switch 1 VOERST NOCH LD2
 	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER6_Pos); 	// PA6 DIP-Switch 2
 	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER7_Pos); 	// PA7 DIP-Switch 3
@@ -64,7 +71,7 @@ void GPIO_Config(void){
 
 	/* Outputs */
 	GPIOA->MODER |= GPIOx_MODER_OUTPUT<<GPIO_MODER_MODER3_Pos;	// PA3 nSleep
-	GPIOA->MODER |= GPIOx_MODER_OUTPUT<<GPIO_MODER_MODER5_Pos;	// PA3 nSleep
+	GPIOA->MODER |= GPIOx_MODER_OUTPUT<<GPIO_MODER_MODER5_Pos;	// PA5 zum Testen (LD2)
 
 	/* Analog */
 	GPIOA->MODER |= GPIOx_MODER_ANALOG<<GPIO_MODER_MODER4_Pos;	// PA4 Fader
@@ -111,13 +118,16 @@ void GPIO_Config(void){
 	 * GPIOx_PUPDR_PU
 	 * GPIOx_PUPDR_PD
 	 */
-
+	GPIOA->PUPDR	 = 0x00000028;			 //Pulldown for PA1/2 (ButtonL_R)
+	GPIOB->PUPDR	|= 0x00000002;			 //PB0 PuLLDOWN (TEST,BUTTON)
 
 	/* ########## GPIO Alternate funtion ########## */
-	/*  */
+	/* Trigger für Timer 2 */
 	GPIOA->AFR[0] |= 1<<GPIO_AFRL_AFRL0_Pos;	// PA0 AF1 TIM2 Ext.Trig.
+	/* PWM für LEDs */
 	GPIOA->AFR[1] |= 10<<GPIO_AFRH_AFRH3_Pos;	// PA11 AF10 TIM4_CH1
 	GPIOA->AFR[1] |= 10<<GPIO_AFRH_AFRH4_Pos;	// PA12 AF10 TIM4_CH2
+	/* PWM für Motor */
 	GPIOA->AFR[1] |= 2<<GPIO_AFRH_AFRH7_Pos;	// PA15 AF2 TIM8_CH1
 	GPIOB->AFR[0] |= 4<<GPIO_AFRL_AFRL3_Pos;	// PB3 AF4 TIM8_CH1N
 	GPIOB->AFR[1] |= 10<<GPIO_AFRH_AFRH0_Pos;	// PB8 AF10 TIM8_CH2
@@ -134,7 +144,9 @@ void GPIO_Config(void){
 	 * Pin Reset		GPIOA->ODR &= ~(GPIO_ODR_<pin>);
 	 * Pin Set			GPIOA->ODR |= GPIO_ODR_<pin>;
 	 */
+
 }
+
 
 
 void TIM_Config(void){
@@ -149,9 +161,64 @@ void TIM_Config(void){
 	TIM2->SMCR |= 0b0110 << TIM_SMCR_SMS_Pos;	// Slave Mode = Triggered Mode
 	TIM2->CR1 |= TIM_CR1_CEN;					// enable Timer2
 	NVIC_EnableIRQ(TIM2_IRQn);					// Enable NVIC on TIM2
+
+	/* Timer 4 LED PWM */
+	TIM4->CCMR1		 = 0x6060;					//PWM MODE 1, reference manual->CNT<CCRx HIGH
+	TIM4->CCER		 = 0x0011;					//Chanels ON
+	TIM4->PSC		 = (SystemCoreClock/1000)-1;//alle 0.1ms
+	TIM4->ARR		 = LED_ARR;					//Max counternum.
+	TIM4->CCR1		 = LED_ARR/2;				//Ontime LEDon (undefinierter zustand) BEIDE LEDs BLINKEN
+	TIM4->CCR2		 = LED_ARR/2;				//Ontime LEDon (undefinierter zustand) BEIDE LEDs BLINKEN
+	TIM4->CR1		 = 0x0001;					//COUNTER (TIM4) ENABLE
+
+	/* Timer 8 Motor PWM */
+	TIM8->CCMR1		= 0x00003030;				//PWM Mode1 CH1/2 TOGGLE_MODE PA7/8/9/12
+	TIM8->CCER		= 0x00000044;				//CH1/2&1n/2n enable, polarity
+	TIM8->BDTR		= 0x0000CC00;				//MOE/AOE/OSSR/OSSI ON
+	TIM8->PSC		= (SystemCoreClock/1000)-1;	//1ms
+	TIM8->ARR		= 9999;
+	TIM8->CCR1		= 4999;
+	TIM8->CCR2 		= 0;
+	TIM8->CR1		= 0x00000001;				//counter enable
 }
 
 void ADC_Config(void){
-	//ADC zur Strommessung
 
+	ADC12_COMMON->CCR |= 0x00010000; 		// Synchroner ADC-Clock ,Vorteiler 1
+	ADC2->SQR1 |= 0x00000040; 				// 1st conv. in regular sequence: Channel 1 (PA4)
+	ADC2->CR &=~0x30000000; 		    	// Voltage regulator: Intermediate state (0b11 << 28), 10 resetstate
+	ADC2->CR |= 0x50000000; 				// Voltage regulator: Enabled (0b01 << 28) DifferentialMode
+	ADC2->SMPR1 |= 0x00000000;				// 601.5 clockcycles
+	for (volatile int x = 0; x < 60; x++){} // Warte 10 us
+	ADC2->CR |= 0x80000000; 				// Kalibriere den ADC
+	while ((ADC2->CR & 0x80000000) != 0){}  // Warte bis Kalibrierung abgeschlossen
+	ADC2->IER = 0x0080; 					// INTERRUPT enable analog watchdog1
+	ADC2->TR1 = 0xFFD00014;					// 0x007C [H]->124->bei 100mA �ber 1 OHM
+	ADC2->CFGR = 0x04C03000;				// Watchdog Enable on regular channels(23),AWD1CH 2(29-26),continuous (13),overrunmode(12)
+
+	ADC2->CR |= 0x00000001; 		 		// Enable ADC
+	while((ADC2->ISR & 0x00000001) == 0){} 	// Warte bis ADC bereit
+	ADC2->CR |= 0x00000004;					// start regular conversation
+	NVIC_EnableIRQ (ADC1_2_IRQn);
+
+}
+
+void EXTI_Config(void){
+
+	/* EXTI für PA1, Button rechts */
+	SYSCFG->EXTICR[0] 		|= 0x0001; //PA_1
+	EXTI->IMR				|= EXTI_IMR_MR1;
+	EXTI->RTSR				|= EXTI_RTSR_TR1;
+	NVIC_EnableIRQ(EXTI1_IRQn);
+
+	/* EXTI für PB0 (PA2 final), Button links */
+	SYSCFG->EXTICR[0] 		|= 0x0000; //PB_0, PA2 final
+	EXTI->IMR				|= EXTI_IMR_MR0;
+	EXTI->RTSR				|= EXTI_RTSR_TR0;
+	NVIC_EnableIRQ(EXTI0_IRQn);
+
+}
+void RESET_Function(void){
+	H_BRIDGE_OFF;
+	MOTORPWM_OFF;
 }
