@@ -32,5 +32,6 @@ void RCC_Config(void);
 void EXTI_Config(void);
 void TIM_Config(void);
 void ADC_Config(void);
+void RESET_Function(void);
 
 #endif

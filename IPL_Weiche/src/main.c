@@ -32,11 +32,14 @@ int main(void){
 	__disable_irq();				//Interrupts ausschalten
 
 	/* Configuration */
-	RCC_Config();					//Clock Config auf 72Mhz durch
-	GPIO_Config(); 					//GPIO Config
-	TIM_Config();					//Config Timer
+	RCC_Config();					// Clock Config auf 72Mhz durch
+	GPIO_Config(); 					// GPIO Config
+	TIM_Config();					// Config Timer
+	ADC_Config();					// ADC2 Config
+	EXTI_Config();					// EXTI0 & 1 Config !! noch nicht richtig
 
 	/* Initialisierung/Kalibrierung */
+	RESET_Function();				//Weichensteuerung initialisieren
 	dcc_address = 0x1A2;			//Adresse auslesen
 
 	__enable_irq();					//Interrupts einschalten
