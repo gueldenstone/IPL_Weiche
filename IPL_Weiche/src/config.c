@@ -58,7 +58,7 @@ void GPIO_Config(void){
 	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER1_Pos); 	// PA1 Pos1 Input
 	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER2_Pos); 	// PA2 Pos2 Input
 
-	GPIOC->MODER &= ~(0b11 << GPIO_MODER_MODER0_Pos); 	// PC0 nur zum Testen nSleep
+
 
 //	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER5_Pos); 	// PA5 DIP-Switch 1 VOERST NOCH LD2
 	GPIOA->MODER &= ~(0b11 << GPIO_MODER_MODER6_Pos); 	// PA6 DIP-Switch 2
@@ -72,6 +72,7 @@ void GPIO_Config(void){
 	/* Outputs */
 	GPIOA->MODER |= GPIOx_MODER_OUTPUT<<GPIO_MODER_MODER3_Pos;	// PA3 nSleep
 	GPIOA->MODER |= GPIOx_MODER_OUTPUT<<GPIO_MODER_MODER5_Pos;	// PA5 zum Testen (LD2)
+	GPIOC->MODER |= GPIOx_MODER_OUTPUT<<GPIO_MODER_MODER0_Pos; 	// PC0 nur zum Testen nSleep
 
 	/* Analog */
 	GPIOA->MODER |= GPIOx_MODER_ANALOG<<GPIO_MODER_MODER4_Pos;	// PA4 Fader
