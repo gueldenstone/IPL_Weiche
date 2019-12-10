@@ -31,13 +31,13 @@ typedef struct{
 #define MOTOR_RIGHT		TIM8->CCER=0x00000055;
 
 /* LEDs */
-#define blinkonr	TIM4->CCR1=5000
-#define blinkonl	TIM4->CCR2=5000
-#define LEDonr		TIM4->CCR1=10000
-#define LEDonl		TIM4->CCR2=10000
+#define blinkonr	TIM4->CCR1=500
+#define blinkonl	TIM4->CCR2=500
+#define LEDonr		TIM4->CCR1=1000
+#define LEDonl		TIM4->CCR2=1000
 #define LEDoffr		TIM4->CCR1=0000
 #define LEDoffl		TIM4->CCR2=0000
-#define LED_ARR		(10000)
+#define LED_ARR		(1000)
 
 /* Buttons & Poti */
 #define BUTTON_LEFT (GPIOA->IDR & 0x2)

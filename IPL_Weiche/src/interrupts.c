@@ -81,6 +81,7 @@ void ADC1_2_IRQHandler(void){
 		LEDoffr;
 		LEDonl;
 		set=3;
+		GPIOA->ODR &= ~GPIO_ODR_5;
 	}
 
 	H_BRIDGE_OFF;
